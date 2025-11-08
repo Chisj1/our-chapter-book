@@ -2,8 +2,9 @@ import { useState, useEffect } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, Heart, Save } from "lucide-react";
+import { ArrowLeft, Heart, Save, Upload, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const Message = () => {
@@ -12,6 +13,7 @@ const Message = () => {
   const { toast } = useToast();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [message, setMessage] = useState("");
+  const [image, setImage] = useState<string | null>(null);
 
   useEffect(() => {
     const auth = localStorage.getItem("authenticated");
@@ -22,13 +24,38 @@ const Message = () => {
       if (savedMessage) {
         setMessage(savedMessage);
       }
+      // Load saved image if exists
+      const savedImage = localStorage.getItem(`image-${eventId}`);
+      if (savedImage) {
+        setImage(savedImage);
+      }
     } else {
       navigate("/auth");
     }
   }, [navigate, eventId]);
 
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setImage(null);
+  };
+
   const handleSave = () => {
     localStorage.setItem(`message-${eventId}`, message);
+    if (image) {
+      localStorage.setItem(`image-${eventId}`, image);
+    } else {
+      localStorage.removeItem(`image-${eventId}`);
+    }
     toast({
       title: "Message Saved",
       description: "Your message has been saved successfully! ❤️",
@@ -77,6 +104,42 @@ const Message = () => {
                 className="min-h-[300px] resize-none transition-all duration-300 focus:shadow-[var(--shadow-soft)]"
               />
             </div>
+
+            <div className="space-y-4">
+              <div className="flex items-center gap-4">
+                <label htmlFor="image-upload" className="cursor-pointer">
+                  <div className="flex items-center gap-2 px-4 py-2 rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground transition-colors">
+                    <Upload className="w-4 h-4" />
+                    <span className="text-sm">Upload Image</span>
+                  </div>
+                  <Input
+                    id="image-upload"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className="hidden"
+                  />
+                </label>
+                {image && (
+                  <span className="text-sm text-muted-foreground">Image uploaded</span>
+                )}
+              </div>
+
+              {image && (
+                <div className="relative rounded-lg overflow-hidden border border-border/50">
+                  <img src={image} alt="Uploaded memory" className="w-full h-auto" />
+                  <Button
+                    onClick={handleRemoveImage}
+                    size="icon"
+                    variant="destructive"
+                    className="absolute top-2 right-2 w-8 h-8 rounded-full"
+                  >
+                    <X className="w-4 h-4" />
+                  </Button>
+                </div>
+              )}
+            </div>
+
             <Button
               onClick={handleSave}
               className="w-full bg-gradient-to-r from-primary to-accent hover:opacity-90 transition-all duration-300 shadow-[var(--shadow-soft)]"
