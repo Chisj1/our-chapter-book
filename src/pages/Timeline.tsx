@@ -29,24 +29,28 @@ const Timeline = () => {
 
   const events = [
     {
+      id: "first-meeting",
       date: "January 2024",
       title: "First Meeting",
       description: "The day we first met and everything changed. A moment I'll never forget.",
       side: "left" as const,
     },
     {
+      id: "first-date",
       date: "February 2024",
       title: "First Date",
       description: "Our first official date. Nervous smiles, endless conversation, and the beginning of something beautiful.",
       side: "right" as const,
     },
     {
+      id: "made-official",
       date: "March 2024",
       title: "Made It Official",
       description: "The day you said yes. The happiest moment of my life so far.",
       side: "left" as const,
     },
     {
+      id: "first-trip",
       date: "April 2024",
       title: "First Trip Together",
       description: "Our first adventure together. Making memories that will last forever.",

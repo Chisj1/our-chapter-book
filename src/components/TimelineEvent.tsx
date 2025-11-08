@@ -1,7 +1,9 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Heart } from "lucide-react";
+import { Link } from "react-router-dom";
 
 interface TimelineEventProps {
+  id: string;
   date: string;
   title: string;
   description: string;
@@ -9,12 +11,13 @@ interface TimelineEventProps {
   side: "left" | "right";
 }
 
-export const TimelineEvent = ({ date, title, description, image, side }: TimelineEventProps) => {
+export const TimelineEvent = ({ id, date, title, description, image, side }: TimelineEventProps) => {
   return (
     <div className={`flex items-center gap-8 ${side === "right" ? "flex-row-reverse" : ""}`}>
       <div className={`flex-1 ${side === "right" ? "text-left" : "text-right"}`}>
-        <Card className="group hover:shadow-[var(--shadow-soft)] transition-all duration-300 hover:scale-[1.02] border-border/50 bg-card/80 backdrop-blur-sm">
-          <CardContent className="p-6">
+        <Link to={`/message/${id}`}>
+          <Card className="group hover:shadow-[var(--shadow-soft)] transition-all duration-300 hover:scale-[1.02] border-border/50 bg-card/80 backdrop-blur-sm cursor-pointer">
+            <CardContent className="p-6">
             <div className="space-y-3">
               <p className="text-sm text-primary font-medium">{date}</p>
               <h3 className="text-2xl font-serif text-foreground">{title}</h3>
@@ -31,6 +34,7 @@ export const TimelineEvent = ({ date, title, description, image, side }: Timelin
             </div>
           </CardContent>
         </Card>
+        </Link>
       </div>
       
       <div className="relative flex items-center justify-center">
