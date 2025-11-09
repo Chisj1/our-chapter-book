@@ -8,6 +8,57 @@ const Timeline = () => {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
+
+  const handleExpandStory = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const eventDate = (document.getElementById("eventDate") as HTMLInputElement).value;
+    const eventTitle = (document.getElementById("eventTitle") as HTMLInputElement).value;
+    const expandBtn = document.getElementById("expand-btn") as HTMLButtonElement;
+    const loadingIndicator = document.getElementById("story-loading") as HTMLDivElement;
+    if (!eventDate || !eventTitle) return;
+    
+    // Disable button and show loading indicator
+    expandBtn.disabled = true;
+    loadingIndicator.classList.remove("hidden");
+
+    addNewTimelineItem(eventDate, eventTitle);
+    // Clear inputs on success
+    (document.getElementById('eventDate') as HTMLInputElement).value = '';
+    (document.getElementById('eventTitle') as HTMLInputElement).value = '';
+
+  };
+
+  const addNewTimelineItem = (date: string, title: string) => {
+    // Simulate adding new event to timeline
+    setTimeout(() => {
+      // Here you would normally update state or make an API call
+      // For this example, we just re-enable the button and hide loading
+      const expandBtn = document.getElementById("expand-btn") as HTMLButtonElement;
+      const loadingIndicator = document.getElementById("story-loading") as HTMLDivElement;
+      expandBtn.disabled = false;
+      loadingIndicator.classList.add("hidden");
+      alert(`New event added: ${title} on ${new Date(date).toLocaleString('default', { month: 'long', year: 'numeric' })}`);
+    }, 1500);
+  }
+
+  // const addNewTimelineItem(date, title) {
+  //     // Add new event to timeline
+  //     const lastItem = events[events.length - 1];
+  //     const newSide = lastItem && lastItem.side === 'left' ? 'right' as const : 'left' as const;
+  //     events.push({
+  //       id: `${date}-${title}`.toLowerCase().replace(/\s+/g, '-'),
+  //       date: new Date(date).toLocaleString('default', { month: 'long', year: 'numeric' }),
+  //       title: title,
+  //       description: "A new chapter in our story, added by us.",
+  //       side: newSide,
+  //     });
+  //     // Re-enable button and hide loading indicator
+  //     const expandBtn = document.getElementById("expand-btn") as HTMLButtonElement;
+  //     const loadingIndicator = document.getElementById("story-loading") as HTMLDivElement;
+  //     expandBtn.disabled = false;
+  //     loadingIndicator.classList.add("hidden");
+  // }
+
   useEffect(() => {
     // Check if user is authenticated
     const auth = localStorage.getItem("authenticated");
@@ -27,6 +78,7 @@ const Timeline = () => {
     return null;
   }
 
+  // <-- Sample timeline events data -->
   const events = [
     {
       id: "first-meeting",
@@ -78,6 +130,44 @@ const Timeline = () => {
           {/* Timeline line */}
           <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary via-accent to-primary transform -translate-x-1/2"></div>
           
+          {/* New Event Input Area */}
+          <div className="mb-16 flex justify-center animate-fade-in">
+            <div className="bg-card rounded-lg shadow-[var(--shadow-soft)] p-6 w-full max-w-2xl">
+              <h2 className="text-2xl font-semibold mb-4 text-center">Expand Our Story</h2>
+              <form onSubmit={handleExpandStory} className="space-y-4">
+                <div className="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
+                  <input
+                    type="month"
+                    id="eventDate"
+                    required
+                    className="flex-1 retro-input transition-all duration-300 focus:shadow-[var(--shadow-soft)]"
+                  />
+                  <input
+                    type="text"
+                    id="eventTitle"
+                    placeholder="Event Title"
+                    required
+                    className="flex-1 retro-input transition-all duration-300 focus:shadow-[var(--shadow-soft)]"
+                  />
+                </div>
+                <div className="flex items-center space-x-4">
+                  <Button
+                    type="submit"
+                    id="expand-btn"
+                    className="from-primary to-accent transition-all duration-300 shadow-[var(--shadow-soft)] retro-btn"
+                  >
+                    Expand Story
+                  </Button>
+                  <div
+                    id="story-loading"
+                    className="hidden w-6 h-6 border-4 border-t-4 border-primary rounded-full animate-spin"
+                  ></div>
+                </div>
+              </form>
+            </div>
+          </div>
+
+
           {/* Timeline events */}
           <div className="space-y-16">
             {events.map((event, index) => (
@@ -102,4 +192,4 @@ const Timeline = () => {
   );
 };
 
-export default Timeline;
+
