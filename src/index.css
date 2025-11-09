@@ -1,110 +1,97 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* 8-bit palette variables */
+/* :root{
+  --retro-bg: #432323;
+  --retro-fg: #ff6B98;
+  --retro-accent: #ff4d4d;
+  --retro-2: #00d1ff;
+} */
 
-@layer base {
-  :root {
-    --background: 340 40% 98%;
-    --foreground: 340 30% 15%;
-
-    --card: 0 0% 100%;
-    --card-foreground: 340 30% 15%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 340 30% 15%;
-
-    --primary: 350 75% 65%;
-    --primary-foreground: 0 0% 100%;
-
-    --secondary: 340 60% 95%;
-    --secondary-foreground: 340 30% 15%;
-
-    --muted: 340 40% 96%;
-    --muted-foreground: 340 20% 50%;
-
-    --accent: 45 90% 70%;
-    --accent-foreground: 340 30% 15%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 100%;
-
-    --border: 340 30% 90%;
-    --input: 340 30% 90%;
-    --ring: 350 75% 65%;
-
-    --radius: 0.75rem;
-    
-    --gradient-romantic: linear-gradient(135deg, hsl(350 75% 75%), hsl(340 70% 85%));
-    --gradient-sunset: linear-gradient(180deg, hsl(340 40% 98%), hsl(350 60% 95%));
-    --shadow-soft: 0 10px 40px -10px hsl(350 75% 65% / 0.2);
-    --shadow-glow: 0 0 30px hsl(350 75% 75% / 0.3);
-
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
-
-  .dark {
-    --background: 340 30% 8%;
-    --foreground: 340 40% 95%;
-
-    --card: 340 25% 12%;
-    --card-foreground: 340 40% 95%;
-
-    --popover: 340 25% 12%;
-    --popover-foreground: 340 40% 95%;
-
-    --primary: 350 75% 65%;
-    --primary-foreground: 0 0% 100%;
-
-    --secondary: 340 25% 18%;
-    --secondary-foreground: 340 40% 95%;
-
-    --muted: 340 25% 18%;
-    --muted-foreground: 340 20% 60%;
-
-    --accent: 45 85% 65%;
-    --accent-foreground: 340 40% 95%;
-
-    --destructive: 0 62.8% 50%;
-    --destructive-foreground: 0 0% 100%;
-
-    --border: 340 25% 20%;
-    --input: 340 25% 20%;
-    --ring: 350 75% 65%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
+:root {
+  --color-pink-accent: #FF6B98;
+  --color-blue-primary: #5DADE2;
+  --color-green-secondary: #7DCEA0;
+  --color-background-light: #E3EBF3;
+  --color-contrast-dark: #2C3E50;
+  --retro-bg: #432323;
+  --retro-fg: #ff6B98;
+  --retro-accent: #ff4d4d;
+  --retro-2: #00d1ff;
 }
 
-@layer base {
-  * {
-    @apply border-border;
-  }
 
-  body {
-    @apply bg-background text-foreground;
-  }
+/* Use the pixel font and disable smoothing for a blocky look */
+html, body {
+  font-family: "Press Start 2P", monospace;
+  background: var(--color-blue-primary);
+  color: var(--color-pink-accent);
+  -webkit-font-smoothing: none;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Force pixelated rendering for images/canvases */
+img, canvas, video {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  image-rendering: -o-crisp-edges;
+}
+
+.bg-card {
+  background-color: var(--color-background-light)
+}
+
+.border-card {
+  box-shadow: 8px 8px 0px var(--color-contrast-dark);
+  border: 6px solid var(--retro-bg);
+}
+
+
+/* Utility classes for retro decorations */
+.pixelated {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+.retro-border {
+  box-shadow: inset 0 0 0 4px var(--retro-accent);
+}
+
+.retro-btn {
+    background: var(--retro-accent); /* #ff4d4d */
+    color: var(--color-contrast-dark); /* Ensure text is readable */
+    padding: 8px 12px;
+    border: 2px solid var(--retro-fg);
+    box-shadow: 4px 4px 0px var(--color-contrast-dark); /* Initial 3D shadow */
+    display: inline-block;
+    cursor: pointer;
+    transition: all 0.1s ease-in-out; /* Fast transition for pixel feel */
+    line-height: 1; /* Adjust line height for pixel font */
+    border-radius: 0; /* Override Tailwind rounding */
+}
+
+.retro-btn:hover {
+    transform: translate(1px, 1px);
+    box-shadow: 3px 3px 0px var(--color-contrast-dark);
+}
+
+.retro-btn:active {
+    transform: translate(4px, 4px);
+    box-shadow: 0px 0px 0px var(--color-contrast-dark);
+}
+
+.text-muted-foreground {
+  color: var(--color-contrast-dark);
+}
+
+/* small tweak for pixel-perfect scaling on high-DPI */
+body {
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
 }

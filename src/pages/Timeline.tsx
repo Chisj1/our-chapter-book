@@ -62,7 +62,7 @@ const Timeline = () => {
     <div className="min-h-screen bg-gradient-to-br from-background via-secondary to-background">
       <div className="container max-w-5xl mx-auto px-4 py-16">
         <div className="text-center mb-16 space-y-4 animate-fade-in">
-          <h1 className="text-5xl md:text-6xl font-serif text-foreground">Our Love Story</h1>
+          <h1 className="text-5xl md:text-6xl text-foreground">Our Love Story</h1>
           <p className="text-xl text-muted-foreground">Every moment with you is a cherished memory</p>
           <Button
             variant="outline"
@@ -77,7 +77,7 @@ const Timeline = () => {
 
         <div className="relative">
           {/* Timeline line */}
-          <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary via-accent to-primary opacity-30 transform -translate-x-1/2"></div>
+          <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary via-accent to-primary transform -translate-x-1/2"></div>
           
           {/* Timeline events */}
           <div className="space-y-16">

@@ -16,11 +16,11 @@ export const TimelineEvent = ({ id, date, title, description, image, side }: Tim
     <div className={`flex items-center gap-8 ${side === "right" ? "flex-row-reverse" : ""}`}>
       <div className={`flex-1 ${side === "right" ? "text-left" : "text-right"}`}>
         <Link to={`/message/${id}`}>
-          <Card className="group hover:shadow-[var(--shadow-soft)] transition-all duration-300 hover:scale-[1.02] border-border/50 bg-card/80 backdrop-blur-sm cursor-pointer">
+          <Card className="group hover:shadow-[var(--shadow-soft)] transition-all duration-300 hover:scale-[1.02] border-border/50 bg-card/80 backdrop-blur-sm cursor-pointer bg-card">
             <CardContent className="p-6">
             <div className="space-y-3">
               <p className="text-sm text-primary font-medium">{date}</p>
-              <h3 className="text-2xl font-serif text-foreground">{title}</h3>
+              <h3 className="text-2xl text-foreground">{title}</h3>
               <p className="text-muted-foreground leading-relaxed">{description}</p>
               {image && (
                 <div className="mt-4 rounded-lg overflow-hidden">

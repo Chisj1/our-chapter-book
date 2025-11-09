@@ -22,14 +22,14 @@ const Auth = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-secondary to-background p-4">
-      <Card className="w-full max-w-md shadow-[var(--shadow-soft)] border-border/50">
+      <Card className="w-full max-w-md shadow-[var(--shadow-soft)]">
         <CardHeader className="text-center space-y-4">
           <div className="flex justify-center">
             <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-[var(--shadow-glow)]">
               <Heart className="w-8 h-8 text-primary-foreground fill-current" />
             </div>
           </div>
-          <CardTitle className="text-3xl font-serif">Our Story</CardTitle>
+          <CardTitle className="text-3xl">Our Story</CardTitle>
           <CardDescription className="text-muted-foreground">
             Enter the password to unlock our timeline
           </CardDescription>
@@ -46,8 +46,9 @@ const Auth = () => {
                   setPassword(e.target.value);
                   setError("");
                 }}
-                placeholder="Enter password"
-                className="transition-all duration-300 focus:shadow-[var(--shadow-soft)]"
+                placeholder="Our first interaction..."
+                style={{ border: "3px solid var(--retro-fg)",  boxShadow: "4px 4px 0px var(--color-contrast-dark)" }}
+                className=" transition-all duration-300 focus:shadow-[var(--shadow-soft)]"
               />
               {error && (
                 <p className="text-sm text-destructive animate-fade-in">{error}</p>
@@ -55,7 +56,7 @@ const Auth = () => {
             </div>
             <Button 
               type="submit" 
-              className="w-full bg-gradient-to-r from-primary to-accent hover:opacity-90 transition-all duration-300 shadow-[var(--shadow-soft)]"
+              className="w-full from-primary to-accent transition-all duration-300 shadow-[var(--shadow-soft)] retro-btn"
             >
               Unlock Our Story
             </Button>

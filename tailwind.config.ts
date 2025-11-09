@@ -2,7 +2,13 @@ import type { Config } from "tailwindcss";
 
 export default {
   darkMode: ["class"],
-  content: ["./pages/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
+  content: [
+    "./index.html",
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
+  ],
   prefix: "",
   theme: {
     container: {
@@ -15,6 +21,8 @@ export default {
     extend: {
       fontFamily: {
         'serif': ['Playfair Display', 'serif'],
+        // add a retro 8-bit style font (Press Start 2P from Google Fonts)
+        pressstart: ['"Press Start 2P"', 'monospace']
       },
       colors: {
         border: "hsl(var(--border))",
@@ -60,6 +68,16 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        // small retro palette
+        "retro-bg": "#0b1220",
+        "retro-fg": "#c6ff00",
+        "retro-accent": "#ff4d4d",
+        "retro-2": "#00d1ff",
+        // Project color palette
+        "pale-blue": "#BAD7DF",  // #BAD7DF
+        "soft-pink": "#FFE2E2",  // #FFE2E2
+        "light-gray": "#F6F6F6", // #F6F6F6
+        "mint": "#99DDCC"        // #99DDCC
       },
       borderRadius: {
         lg: "var(--radius)",
