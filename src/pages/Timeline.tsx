@@ -4,60 +4,96 @@ import { TimelineEvent } from "@/components/TimelineEvent";
 import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
 
+// Define the shape of a timeline event
+interface Event {
+  id: string;
+  date: string;
+  title: string;
+  description: string;
+  side: "left" | "right";
+}
+
+// Initial static events
+const initialEvents: Event[] = [
+  {
+    id: "first-meeting",
+    date: "January 2024",
+    title: "First Meeting",
+    description: "The day we first met and everything changed. A moment I'll never forget.",
+    side: "left",
+  },
+  {
+    id: "first-date",
+    date: "February 2024",
+    title: "First Date",
+    description: "Our first official date. Nervous smiles, endless conversation, and the beginning of something beautiful.",
+    side: "right",
+  },
+  {
+    id: "made-official",
+    date: "March 2024",
+    title: "Made It Official",
+    description: "The day you said yes. The happiest moment of my life so far.",
+    side: "left",
+  },
+  {
+    id: "first-trip",
+    date: "April 2024",
+    title: "First Trip Together",
+    description: "Our first adventure together. Making memories that will last forever.",
+    side: "right",
+  },
+];
+
 const Timeline = () => {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // State for the events array
+  const [events, setEvents] = useState<Event[]>(initialEvents);
+  // State for the form inputs
+  const [eventDate, setEventDate] = useState("");
+  const [eventTitle, setEventTitle] = useState("");
+  // State for loading/disabling the button
+  const [isLoading, setIsLoading] = useState(false);
 
+  /**
+   * Adds a new event to the timeline state after a short delay (simulating data processing).
+   */
+  const addNewTimelineItem = (date: string, title: string) => {
+    // Logic to determine the side of the new item
+    const lastItem = events[events.length - 1];
+    const newSide = lastItem && lastItem.side === "left" ? ("right" as const) : ("left" as const);
+    
+    // Format the date for display
+    const formattedDate = new Date(date).toLocaleString("default", { month: "long", year: "numeric" });
+
+    const newEvent: Event = {
+      id: `${date}-${title}`.toLowerCase().replace(/\s+/g, "-"),
+      date: formattedDate,
+      title: title,
+      // Default description since LLM integration is removed
+      description: "A new chapter in our story, written with love.",
+      side: newSide,
+    };
+
+    // Simulate API/LLM processing time
+    setTimeout(() => {
+      setEvents((prevEvents) => [...prevEvents, newEvent]);
+      setEventDate(""); // Clear form state
+      setEventTitle(""); // Clear form state
+      setIsLoading(false); // Hide loading
+    }, 1500);
+  };
 
   const handleExpandStory = async (e: React.FormEvent) => {
     e.preventDefault();
-    const eventDate = (document.getElementById("eventDate") as HTMLInputElement).value;
-    const eventTitle = (document.getElementById("eventTitle") as HTMLInputElement).value;
-    const expandBtn = document.getElementById("expand-btn") as HTMLButtonElement;
-    const loadingIndicator = document.getElementById("story-loading") as HTMLDivElement;
-    if (!eventDate || !eventTitle) return;
-    
-    // Disable button and show loading indicator
-    expandBtn.disabled = true;
-    loadingIndicator.classList.remove("hidden");
 
+    if (!eventDate || !eventTitle || isLoading) return;
+
+    setIsLoading(true); // Show loading indicator
     addNewTimelineItem(eventDate, eventTitle);
-    // Clear inputs on success
-    (document.getElementById('eventDate') as HTMLInputElement).value = '';
-    (document.getElementById('eventTitle') as HTMLInputElement).value = '';
-
   };
 
-  const addNewTimelineItem = (date: string, title: string) => {
-    // Simulate adding new event to timeline
-    setTimeout(() => {
-      // Here you would normally update state or make an API call
-      // For this example, we just re-enable the button and hide loading
-      const expandBtn = document.getElementById("expand-btn") as HTMLButtonElement;
-      const loadingIndicator = document.getElementById("story-loading") as HTMLDivElement;
-      expandBtn.disabled = false;
-      loadingIndicator.classList.add("hidden");
-      alert(`New event added: ${title} on ${new Date(date).toLocaleString('default', { month: 'long', year: 'numeric' })}`);
-    }, 1500);
-  }
-
-  // const addNewTimelineItem(date, title) {
-  //     // Add new event to timeline
-  //     const lastItem = events[events.length - 1];
-  //     const newSide = lastItem && lastItem.side === 'left' ? 'right' as const : 'left' as const;
-  //     events.push({
-  //       id: `${date}-${title}`.toLowerCase().replace(/\s+/g, '-'),
-  //       date: new Date(date).toLocaleString('default', { month: 'long', year: 'numeric' }),
-  //       title: title,
-  //       description: "A new chapter in our story, added by us.",
-  //       side: newSide,
-  //     });
-  //     // Re-enable button and hide loading indicator
-  //     const expandBtn = document.getElementById("expand-btn") as HTMLButtonElement;
-  //     const loadingIndicator = document.getElementById("story-loading") as HTMLDivElement;
-  //     expandBtn.disabled = false;
-  //     loadingIndicator.classList.add("hidden");
-  // }
 
   useEffect(() => {
     // Check if user is authenticated
@@ -78,38 +114,6 @@ const Timeline = () => {
     return null;
   }
 
-  // <-- Sample timeline events data -->
-  const events = [
-    {
-      id: "first-meeting",
-      date: "January 2024",
-      title: "First Meeting",
-      description: "The day we first met and everything changed. A moment I'll never forget.",
-      side: "left" as const,
-    },
-    {
-      id: "first-date",
-      date: "February 2024",
-      title: "First Date",
-      description: "Our first official date. Nervous smiles, endless conversation, and the beginning of something beautiful.",
-      side: "right" as const,
-    },
-    {
-      id: "made-official",
-      date: "March 2024",
-      title: "Made It Official",
-      description: "The day you said yes. The happiest moment of my life so far.",
-      side: "left" as const,
-    },
-    {
-      id: "first-trip",
-      date: "April 2024",
-      title: "First Trip Together",
-      description: "Our first adventure together. Making memories that will last forever.",
-      side: "right" as const,
-    },
-  ];
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-secondary to-background">
       <div className="container max-w-5xl mx-auto px-4 py-16">
@@ -120,9 +124,10 @@ const Timeline = () => {
             variant="outline"
             size="sm"
             onClick={handleLogout}
-            className="mt-4 retro-btn retro-btn-logout"
+            className="mt-4 retro-btn retro-btn-secondary"
           >
-            &lt; Logout
+            <LogOut className="h-4 w-4 mr-2" />
+            Logout
           </Button>
         </div>
 
@@ -140,6 +145,8 @@ const Timeline = () => {
                     type="month"
                     id="eventDate"
                     required
+                    value={eventDate}
+                    onChange={(e) => setEventDate(e.target.value)}
                     className="flex-1 retro-input transition-all duration-300 focus:shadow-[var(--shadow-soft)]"
                   />
                   <input
@@ -147,20 +154,26 @@ const Timeline = () => {
                     id="eventTitle"
                     placeholder="Event Title"
                     required
+                    value={eventTitle}
+                    onChange={(e) => setEventTitle(e.target.value)}
                     className="flex-1 retro-input transition-all duration-300 focus:shadow-[var(--shadow-soft)]"
                   />
                 </div>
-                <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-4 justify-center">
                   <Button
                     type="submit"
                     id="expand-btn"
-                    className="from-primary to-accent transition-all duration-300 shadow-[var(--shadow-soft)] retro-btn"
+                    disabled={isLoading || !eventDate || !eventTitle}
+                    className="from-primary to-accent transition-all duration-300 shadow-[var(--shadow-soft)] retro-btn retro-btn-primary"
                   >
                     Expand Story
                   </Button>
                   <div
                     id="story-loading"
-                    className="hidden w-6 h-6 border-4 border-t-4 border-primary rounded-full animate-spin"
+                    // Use conditional rendering instead of class toggling
+                    className={
+                        isLoading ? "w-6 h-6 border-4 border-t-4 border-primary rounded-full animate-spin" : "hidden"
+                    }
                   ></div>
                 </div>
               </form>
@@ -172,7 +185,7 @@ const Timeline = () => {
           <div className="space-y-16">
             {events.map((event, index) => (
               <div
-                key={index}
+                key={event.id} // Use a unique ID for the key
                 className="animate-fade-in"
                 style={{ animationDelay: `${index * 0.2}s` }}
               >
@@ -193,3 +206,4 @@ const Timeline = () => {
 };
 
 
+export default Timeline;
