@@ -13,15 +13,15 @@
 } */
 
 :root {
-  --color-pink-accent: #FF6B98;
-  --color-blue-primary: #5DADE2;
+  --color-pink-accent: #5c62b6;
+  --color-blue-primary: #6da0e1;
   --color-green-secondary: #7DCEA0;
-  --color-background-light: #E3EBF3;
+  --color-background-light: #ede1e1;
   --color-contrast-dark: #2C3E50;
   --retro-bg: #432323;
-  --retro-fg: #ff6B98;
-  --retro-accent: #ff4d4d;
-  --retro-2: #00d1ff;
+  --retro-fg: #e2c1dc;
+  --retro-accent: #e2c1dc;
+  --retro-2: #6da0e1;
 }
 
 
@@ -61,6 +61,10 @@ img, canvas, video {
 
 .retro-border {
   box-shadow: inset 0 0 0 4px var(--retro-accent);
+}
+
+.text-foreground {
+  color: var(--color-contrast-dark);
 }
 
 .retro-btn {

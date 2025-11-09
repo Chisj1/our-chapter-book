@@ -126,60 +126,60 @@ const Timeline = () => {
             onClick={handleLogout}
             className="mt-4 retro-btn retro-btn-secondary"
           >
-            <LogOut className="h-4 w-4 mr-2" />
-            Logout
+            &lt; Logout
           </Button>
         </div>
 
-        <div className="relative">
-          {/* Timeline line */}
-          <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary via-accent to-primary transform -translate-x-1/2"></div>
-          
-          {/* New Event Input Area */}
-          <div className="mb-16 flex justify-center animate-fade-in">
-            <div className="bg-card rounded-lg shadow-[var(--shadow-soft)] p-6 w-full max-w-2xl">
-              <h2 className="text-2xl font-semibold mb-4 text-center">Expand Our Story</h2>
-              <form onSubmit={handleExpandStory} className="space-y-4">
-                <div className="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
-                  <input
-                    type="month"
-                    id="eventDate"
-                    required
-                    value={eventDate}
-                    onChange={(e) => setEventDate(e.target.value)}
-                    className="flex-1 retro-input transition-all duration-300 focus:shadow-[var(--shadow-soft)]"
-                  />
-                  <input
-                    type="text"
-                    id="eventTitle"
-                    placeholder="Event Title"
-                    required
-                    value={eventTitle}
-                    onChange={(e) => setEventTitle(e.target.value)}
-                    className="flex-1 retro-input transition-all duration-300 focus:shadow-[var(--shadow-soft)]"
-                  />
-                </div>
-                <div className="flex items-center space-x-4 justify-center">
-                  <Button
-                    type="submit"
-                    id="expand-btn"
-                    disabled={isLoading || !eventDate || !eventTitle}
-                    className="from-primary to-accent transition-all duration-300 shadow-[var(--shadow-soft)] retro-btn retro-btn-primary"
-                  >
-                    Expand Story
-                  </Button>
-                  <div
-                    id="story-loading"
-                    // Use conditional rendering instead of class toggling
-                    className={
-                        isLoading ? "w-6 h-6 border-4 border-t-4 border-primary rounded-full animate-spin" : "hidden"
-                    }
-                  ></div>
-                </div>
-              </form>
-            </div>
+        {/* New Event Input Area */}
+        <div className="mb-16 flex justify-center animate-fade-in">
+          <div className="bg-card rounded-lg shadow-[var(--shadow-soft)] p-6 w-full max-w-2xl">
+            <h2 className="text-2xl font-semibold mb-4 text-center">Expand Our Story</h2>
+            <form onSubmit={handleExpandStory} className="space-y-4">
+              <div className="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
+                <input
+                  type="month"
+                  id="eventDate"
+                  required
+                  value={eventDate}
+                  onChange={(e) => setEventDate(e.target.value)}
+                  className="flex-1 retro-input transition-all duration-300 focus:shadow-[var(--shadow-soft)]"
+                />
+                <input
+                  type="text"
+                  id="eventTitle"
+                  placeholder="Event Title"
+                  required
+                  value={eventTitle}
+                  onChange={(e) => setEventTitle(e.target.value)}
+                  className="flex-1 retro-input transition-all duration-300 focus:shadow-[var(--shadow-soft)]"
+                />
+              </div>
+              <div className="flex items-center space-x-4 justify-center">
+                <Button
+                  type="submit"
+                  id="expand-btn"
+                  disabled={isLoading || !eventDate || !eventTitle}
+                  className="from-primary to-accent transition-all duration-300 shadow-[var(--shadow-soft)] retro-btn retro-btn-primary"
+                >
+                  Expand Story
+                </Button>
+                <div
+                  id="story-loading"
+                  // Use conditional rendering instead of class toggling
+                  className={
+                      isLoading ? "w-6 h-6 border-4 border-t-4 border-primary rounded-full animate-spin" : "hidden"
+                  }
+                ></div>
+              </div>
+            </form>
           </div>
-
+        </div>
+          <div className="relative">
+          {/* Timeline line */}
+          <div 
+          style={{background : "var(--retro-accent)"}}
+          className="absolute left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-primary via-accent to-primary transform -translate-x-1/2" 
+          ></div>
 
           {/* Timeline events */}
           <div className="space-y-16">
