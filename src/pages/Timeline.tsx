@@ -68,10 +68,9 @@ const Timeline = () => {
             variant="outline"
             size="sm"
             onClick={handleLogout}
-            className="mt-4"
+            className="mt-4 retro-btn retro-btn-logout"
           >
-            <LogOut className="w-4 h-4 mr-2" />
-            Logout
+            &lt; Logout
           </Button>
         </div>
 

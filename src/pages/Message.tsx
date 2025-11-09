@@ -88,7 +88,7 @@ const Message = () => {
                 <Heart className="w-8 h-8 text-primary-foreground fill-current" />
               </div>
             </div>
-            <CardTitle className="text-3xl font-serif">
+            <CardTitle className="text-3xl">
               {eventTitles[eventId || ""] || "Write Your Message"}
             </CardTitle>
             <CardDescription className="text-muted-foreground">
