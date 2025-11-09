@@ -47,8 +47,7 @@ const Auth = () => {
                   setError("");
                 }}
                 placeholder="Our first interaction..."
-                style={{ border: "3px solid var(--retro-fg)",  boxShadow: "4px 4px 0px var(--color-contrast-dark)" }}
-                className=" transition-all duration-300 focus:shadow-[var(--shadow-soft)]"
+                className="retro-input transition-all duration-300 focus:shadow-[var(--shadow-soft)]"
               />
               {error && (
                 <p className="text-sm text-destructive animate-fade-in">{error}</p>
