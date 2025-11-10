@@ -122,7 +122,7 @@ const Message = () => {
                 <MyHeart className="w-8 h-8 text-primary-foreground fill-current" />
               </div>
             </div>
-            <CardTitle className="text-3xl">
+            <CardTitle className="text-3xl text-foreground-red">
               {eventTitle}
             </CardTitle>
             <CardDescription className="text-muted-foreground">
@@ -130,7 +130,7 @@ const Message = () => {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div className="space-y-2">
+            <div className="space-y-2 pixelated-font-vn">
               <Textarea
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}

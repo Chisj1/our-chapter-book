@@ -1,5 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
-
+@font-face {
+  font-family: "FVF Fernando";
+  src: url("/workspaces/our-chapter-book/public/FVF Fernando 08.ttf") format("truetype");
+  font-weight: bolder;
+  font-style: normal;
+  font-display: swap;
+}
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -58,6 +64,12 @@ img, canvas, video {
 .pixelated {
   image-rendering: pixelated;
   image-rendering: crisp-edges;
+}
+
+.pixelated-font-vn {
+  font-family: "FVF Fernando", monospace;
+  -webkit-font-smoothing: none;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .retro-border {
