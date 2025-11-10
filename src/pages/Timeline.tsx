@@ -175,7 +175,7 @@ const Timeline = () => {
             variant="outline"
             size="sm"
             onClick={handleLogout}
-            className="mt-4 retro-btn retro-btn-secondary"
+            className="mt-4 retro-btn"
           >
             &lt; Logout
           </Button>
