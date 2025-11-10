@@ -40,11 +40,20 @@ app.use(cors({
 app.use(bodyParser.json());
 
 // helper to format month input like "2025-05" -> "May 2025"
-function formatMonth(dateInput) {
+function formatDate(dateInput) {
+  if (!dateInput) return dateInput;
   try {
-    const d = new Date(dateInput + "-01");
-    return d.toLocaleString("default", { month: "long", year: "numeric" });
-  } catch {
+    const d = new Date(dateInput);
+
+    // Check for "Invalid Date"
+    if (isNaN(d.getTime())) {
+        throw new Error("Invalid Date");
+    }
+    
+    // Format to Month Year only, as required for the timeline
+    return d.toLocaleString("default", { day:"numeric", month: "long", year: "numeric" });
+  } catch (e) {
+    console.warn(`Could not parse date: ${dateInput}. Falling back to original string.`);
     return dateInput;
   }
 }
@@ -71,7 +80,7 @@ app.post("/api/events", (req, res) => {
     const lastSide = row ? row.side : "right";
     const side = lastSide === "left" ? "right" : "left";
 
-    const formattedDate = formatMonth(date);
+    const formattedDate = formatDate(date);
 
     const stmt = db.prepare(
       "INSERT INTO events (date, title, description, side) VALUES (?, ?, ?, ?)"
@@ -85,6 +94,41 @@ app.post("/api/events", (req, res) => {
       });
     });
     stmt.finalize();
+  });
+});
+
+// PUT update an event
+app.put("/api/events/:id", (req, res) => {
+  const { id } = req.params;
+  const { date, title, description } = req.body;
+  if (!date || !title) {
+    return res.status(400).json({ error: "date and title required" });
+  }
+
+  const formattedDate = formatDate(date);
+
+  db.run(
+    "UPDATE events SET date = ?, title = ?, description = ? WHERE id = ?",
+    [formattedDate, title, description || "", id],
+    function (err) {
+      if (err) return res.status(500).json({ error: err.message });
+      // if no rows changed, the id probably didn't exist
+      if (this.changes === 0) return res.status(404).json({ error: "Event not found" });
+      db.get("SELECT * FROM events WHERE id = ?", [id], (err2, row) => {
+        if (err2) return res.status(500).json({ error: err2.message });
+        res.json(row);
+      });
+    }
+  );
+});
+
+// DELETE remove an event
+app.delete("/api/events/:id", (req, res) => {
+  const { id } = req.params;
+  db.run("DELETE FROM events WHERE id = ?", [id], function (err) {
+    if (err) return res.status(500).json({ error: err.message });
+    if (this.changes === 0) return res.status(404).json({ error: "Event not found" });
+    res.json({ success: true });
   });
 });
 

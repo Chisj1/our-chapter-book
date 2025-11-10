@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { TimelineEvent } from "@/components/TimelineEvent";
 import { Button } from "@/components/ui/button";
@@ -23,9 +23,13 @@ const Timeline = () => {
   // State for the form inputs
   const [eventDate, setEventDate] = useState("");
   const [eventTitle, setEventTitle] = useState("");
-  const [eventMemory, setEventMemory] = useState(""); // optional description
+  const [eventDescription, setEventDescription] = useState("");
   // State for loading/disabling the button
   const [isLoading, setIsLoading] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editingTitle, setEditingTitle] = useState("");
+  const [editingDate, setEditingDate] = useState("");
+  const [editingDescription, setEditingDescription] = useState("");
 
   // Fetch events from sqlite API on mount
   useEffect(() => {
@@ -65,7 +69,7 @@ const Timeline = () => {
       setEvents((prev) => [...prev, newEvent]);
       setEventDate("");
       setEventTitle("");
-      setEventMemory("");
+      setEventDescription("");
     } catch (err) {
       console.error("Error adding event:", err);
     } finally {
@@ -77,9 +81,8 @@ const Timeline = () => {
     e.preventDefault();
     if (!eventDate || !eventTitle || isLoading) return;
     setIsLoading(true);
-    await addNewTimelineItem(eventDate, eventTitle, eventMemory);
+    await addNewTimelineItem(eventDate, eventTitle, eventDescription);
   };
-
 
   useEffect(() => {
     // Check if user is authenticated
@@ -94,6 +97,67 @@ const Timeline = () => {
   const handleLogout = () => {
     localStorage.removeItem("authenticated");
     navigate("/auth");
+  };
+
+  const handleEditClick = (ev: Event) => {
+    setEditingId(ev.id);
+    setEditingTitle(ev.title);
+    setEditingDate(ev.date);
+    setEditingDescription(ev.description || "");
+  };
+
+  const handleCancelEdit = () => {
+    setEditingId(null);
+    setEditingTitle("");
+    setEditingDate("");
+    setEditingDescription("");
+  };
+
+  const handleSaveEdit = async (id: string) => {
+    if (!editingTitle.trim() || !editingDate.trim()) return;
+    try {
+      const url = `${API_BASE}/events/${id}`;
+      const res = await fetch(url, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: editingTitle.trim(),
+          date: editingDate.trim(),
+          description: editingDescription.trim(),
+        }),
+      });
+      // capture body for debugging
+      const text = await res.text();
+      if (!res.ok) {
+        console.error("PUT", url, "status", res.status, "body:", text);
+        let errMsg = `Failed to update event (status ${res.status})`;
+        try {
+          const json = JSON.parse(text);
+          errMsg = json?.error || json?.message || errMsg;
+        } catch { /* ignore JSON parse errors */ }
+        throw new Error(errMsg);
+      }
+
+      const updated = JSON.parse(text);
+      setEvents((prev) => prev.map((e) => (e.id === id ? updated : e)));
+      handleCancelEdit();
+    } catch (err) {
+      console.error("Error updating event:", err);
+    }
+  };
+
+  const handleDeleteEvent = async (id: string) => {
+    if (!confirm("Delete this event? This cannot be undone.")) return;
+    try {
+      const res = await fetch(`/api/events/${id}`, { method: "DELETE" });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err?.error || "Failed to delete event");
+      }
+      setEvents((prev) => prev.filter((e) => e.id !== id));
+    } catch (err) {
+      console.error("Error deleting event:", err);
+    }
   };
 
   if (!isAuthenticated) {
@@ -124,7 +188,7 @@ const Timeline = () => {
             <form onSubmit={handleExpandStory} className="space-y-4">
               <div className="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
                 <input
-                  type="month"
+                  type="date"
                   id="eventDate"
                   required
                   value={eventDate}
@@ -138,6 +202,15 @@ const Timeline = () => {
                   required
                   value={eventTitle}
                   onChange={(e) => setEventTitle(e.target.value)}
+                  className="flex-1 retro-input transition-all duration-300 focus:shadow-[var(--shadow-soft)]"
+                />
+                <input
+                  type="text"
+                  id="eventDescription"
+                  placeholder="Event Description (Optional)"
+                  required
+                  value={eventDescription}
+                  onChange={(e) => setEventDescription(e.target.value)}
                   className="flex-1 retro-input transition-all duration-300 focus:shadow-[var(--shadow-soft)]"
                 />
               </div>
@@ -180,6 +253,70 @@ const Timeline = () => {
               </div>
             ))}
           </div>
+        </div>
+
+        {/* Events list */}
+        <div className="mt-8 space-y-4">
+          {events.map((ev) => (
+            <div key={ev.id} className="retro-card p-4 flex items-start justify-between">
+              <div className="flex-1">
+                {editingId === ev.id ? (
+                  <div className="space-y-2">
+                    <input
+                      className="retro-input text-sm w-full"
+                      value={editingDate}
+                      onChange={(e) => setEditingDate(e.target.value)}
+                    />
+                    <input
+                      className="retro-input text-sm w-full"
+                      value={editingTitle}
+                      onChange={(e) => setEditingTitle(e.target.value)}
+                    />
+                    <textarea
+                      className="retro-input text-sm w-full h-20 resize-none"
+                      value={editingDescription}
+                      onChange={(e) => setEditingDescription(e.target.value)}
+                    />
+                  </div>
+                ) : (
+                  <div>
+                    <div className="text-xs text-muted-foreground">{ev.date}</div>
+                    <div className="text-lg font-medium">{ev.title}</div>
+                    <div className="text-sm mt-2">{ev.description}</div>
+                  </div>
+                )}
+              </div>
+
+              <div className="ml-4 flex flex-col gap-2">
+                {editingId === ev.id ? (
+                  <>
+                    <button
+                      className="retro-btn retro-btn-primary text-xs"
+                      onClick={() => handleSaveEdit(ev.id)}
+                    >
+                      Save
+                    </button>
+                    <button className="retro-btn text-xs" onClick={handleCancelEdit}>
+                      Cancel
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button className="retro-btn text-xs" onClick={() => handleEditClick(ev)}>
+                      Edit
+                    </button>
+                    <button
+                      className="retro-btn retro-btn-destructive text-xs"
+                      onClick={() => handleDeleteEvent(ev.id)}
+                    >
+                      Delete
+                    </button>
+                  </>
+                )}
+              </div>
+            </div>
+          ))}
+          {events.length === 0 && <div className="text-center text-sm text-muted-foreground">No events yet.</div>}
         </div>
 
         <div className="mt-20 text-center">
