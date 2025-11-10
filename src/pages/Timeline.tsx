@@ -13,85 +13,71 @@ interface Event {
   side: "left" | "right";
 }
 
-// Initial static events
-const initialEvents: Event[] = [
-  {
-    id: "first-meeting",
-    date: "January 2024",
-    title: "First Meeting",
-    description: "The day we first met and everything changed. A moment I'll never forget.",
-    side: "left",
-  },
-  {
-    id: "first-date",
-    date: "February 2024",
-    title: "First Date",
-    description: "Our first official date. Nervous smiles, endless conversation, and the beginning of something beautiful.",
-    side: "right",
-  },
-  {
-    id: "made-official",
-    date: "March 2024",
-    title: "Made It Official",
-    description: "The day you said yes. The happiest moment of my life so far.",
-    side: "left",
-  },
-  {
-    id: "first-trip",
-    date: "April 2024",
-    title: "First Trip Together",
-    description: "Our first adventure together. Making memories that will last forever.",
-    side: "right",
-  },
-];
+const API_BASE = "/api";
 
 const Timeline = () => {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   // State for the events array
-  const [events, setEvents] = useState<Event[]>(initialEvents);
+  const [events, setEvents] = useState<Event[]>([]);
   // State for the form inputs
   const [eventDate, setEventDate] = useState("");
   const [eventTitle, setEventTitle] = useState("");
+  const [eventMemory, setEventMemory] = useState(""); // optional description
   // State for loading/disabling the button
   const [isLoading, setIsLoading] = useState(false);
 
+  // Fetch events from sqlite API on mount
+  useEffect(() => {
+    fetch(`${API_BASE}/events`)
+      .then((res) => res.json())
+      .then((data) => {
+        setEvents(data);
+      })
+      .catch((err) => {
+        console.error("Failed to fetch events:", err);
+      });
+  }, []);
+
   /**
-   * Adds a new event to the timeline state after a short delay (simulating data processing).
+   * Adds a new event by POSTing to the server. Server returns the created event.
    */
-  const addNewTimelineItem = (date: string, title: string) => {
-    // Logic to determine the side of the new item
-    const lastItem = events[events.length - 1];
-    const newSide = lastItem && lastItem.side === "left" ? ("right" as const) : ("left" as const);
-    
-    // Format the date for display
-    const formattedDate = new Date(date).toLocaleString("default", { month: "long", year: "numeric" });
+  const addNewTimelineItem = async (date: string, title: string, description?: string) => {
+    try {
+      const payload = {
+        date,
+        title,
+        description: description || "A new chapter in our story, written with love.",
+      };
 
-    const newEvent: Event = {
-      id: `${date}-${title}`.toLowerCase().replace(/\s+/g, "-"),
-      date: formattedDate,
-      title: title,
-      // Default description since LLM integration is removed
-      description: "A new chapter in our story, written with love.",
-      side: newSide,
-    };
+      const res = await fetch(`${API_BASE}/events`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
 
-    // Simulate API/LLM processing time
-    setTimeout(() => {
-      setEvents((prevEvents) => [...prevEvents, newEvent]);
-      setEventDate(""); // Clear form state
-      setEventTitle(""); // Clear form state
-      setIsLoading(false); // Hide loading
-    }, 1500);
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err?.error || "Failed to create event");
+      }
+
+      const newEvent = await res.json();
+      setEvents((prev) => [...prev, newEvent]);
+      setEventDate("");
+      setEventTitle("");
+      setEventMemory("");
+    } catch (err) {
+      console.error("Error adding event:", err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleExpandStory = async (e: React.FormEvent) => {
     e.preventDefault();
-
     if (!eventDate || !eventTitle || isLoading) return;
-
-    setIsLoading(true); // Show loading indicator
-    addNewTimelineItem(eventDate, eventTitle);
+    setIsLoading(true);
+    await addNewTimelineItem(eventDate, eventTitle, eventMemory);
   };
 
 
@@ -118,7 +104,8 @@ const Timeline = () => {
     <div className="min-h-screen bg-gradient-to-br from-background via-secondary to-background">
       <div className="container max-w-5xl mx-auto px-4 py-16">
         <div className="text-center mb-16 space-y-4 animate-fade-in">
-          <h1 className="text-5xl md:text-6xl text-foreground">Our Love Story</h1>
+          <h1 
+          className="text-5xl md:text-6xl text-foreground-light">Our Love Story</h1>
           <p className="text-xl text-muted-foreground">Every moment with you is a cherished memory</p>
           <Button
             variant="outline"

@@ -22,6 +22,7 @@
   --retro-fg: #e2c1dc;
   --retro-accent: #e2c1dc;
   --retro-2: #6da0e1;
+  --retro-accent-red: #ff6B98;
 }
 
 
@@ -67,11 +68,19 @@ img, canvas, video {
   color: var(--color-contrast-dark);
 }
 
+.text-foreground-light {
+  color: var(--retro-accent);
+}
+
+.text-foreground-red {
+  color: var(--retro-accent-red);
+}
+
 .retro-btn {
     background: var(--retro-accent); /* #ff4d4d */
     color: var(--color-contrast-dark); /* Ensure text is readable */
     padding: 8px 12px;
-    border: 2px solid var(--retro-fg);
+    border: 2px solid var(--retro-accent);
     box-shadow: 4px 4px 0px var(--color-contrast-dark); /* Initial 3D shadow */
     display: inline-block;
     cursor: pointer;

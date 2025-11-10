@@ -21,7 +21,7 @@ export const TimelineEvent = ({ id, date, title, description, image, side }: Tim
             <CardContent className="p-6">
             <div className="space-y-3">
               <p className="text-sm text-primary font-medium">{date}</p>
-              <h3 className="text-2xl text-foreground">{title}</h3>
+              <h3 className="text-2xl text-foreground-red">{title}</h3>
               <p className="text-muted-foreground leading-relaxed">{description}</p>
               {image && (
                 <div className="mt-4 rounded-lg overflow-hidden">
