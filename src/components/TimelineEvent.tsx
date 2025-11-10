@@ -1,6 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Heart } from "lucide-react";
 import { Link } from "react-router-dom";
+import MyHeart from "@/components/ui/heart";
 
 interface TimelineEventProps {
   id: string;
@@ -39,7 +40,7 @@ export const TimelineEvent = ({ id, date, title, description, image, side }: Tim
       
       <div className="relative flex items-center justify-center">
         <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-[var(--shadow-glow)] z-10 group-hover:scale-110 transition-transform duration-300">
-          <Heart className="w-6 h-6 text-primary-foreground fill-current" />
+          <MyHeart className="w-6 h-6 text-primary-foreground fill-current" />
         </div>
       </div>
       
