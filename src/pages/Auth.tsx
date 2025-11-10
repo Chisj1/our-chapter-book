@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Heart } from "lucide-react";
+import MyHeart from "@/components/ui/heart";
 
 const Auth = () => {
   const [password, setPassword] = useState("");
@@ -26,7 +27,7 @@ const Auth = () => {
         <CardHeader className="text-center space-y-4">
           <div className="flex justify-center">
             <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-[var(--shadow-glow)]">
-              <Heart className="w-8 h-8 text-primary-foreground fill-current" />
+              <MyHeart className="w-8 h-8 text-primary-foreground fill-current" />
             </div>
           </div>
           <CardTitle className="text-3xl">Our Story</CardTitle>
