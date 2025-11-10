@@ -66,6 +66,16 @@ app.get("/api/events", (req, res) => {
   });
 });
 
+// Get single event
+app.get("/api/events/:id", (req, res) => {
+  const { id } = req.params;
+  db.get("SELECT * FROM events WHERE id = ?", [id], (err, row) => {
+    if (err) return res.status(500).json({ error: err.message });
+    if (!row) return res.status(404).json({ error: "Event not found" });
+    res.json(row);
+  });
+});
+
 // POST new event
 app.post("/api/events", (req, res) => {
   const { date, title, description } = req.body;

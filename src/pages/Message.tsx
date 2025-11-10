@@ -6,14 +6,25 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, Heart, Save, Upload, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import MyHeart from "@/components/ui/heart";
 
 const Message = () => {
+  
+  interface Event {
+  id: string;
+  date: string;
+  title: string;
+  description: string;
+  side: "left" | "right";
+}
   const { eventId } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [message, setMessage] = useState("");
   const [image, setImage] = useState<string | null>(null);
+  const [eventDescription, setEventDescription] = useState("<3");
+  const [eventTitle, setEventTitle] = useState("<3");
 
   useEffect(() => {
     const auth = localStorage.getItem("authenticated");
@@ -33,6 +44,36 @@ const Message = () => {
       navigate("/auth");
     }
   }, [navigate, eventId]);
+
+  useEffect(() => {
+    const fetchEventTitle = async () => {
+      try {
+        const response = await fetch(`/api/events/${eventId}`);
+        if (response.ok) {
+          const data: Event = await response.json();
+          setEventTitle(data.title);
+        }
+      } catch (error) {
+        console.error("Error fetching event title:", error);
+      }
+    };
+    fetchEventTitle();
+  }, [eventId]);
+
+    useEffect(() => {
+    const fetchEventDescription = async () => {
+      try {
+        const response = await fetch(`/api/events/${eventId}`);
+        if (response.ok) {
+          const data: Event = await response.json();
+          setEventDescription(data.description);
+        }
+      } catch (error) {
+        console.error("Error fetching event title:", error);
+      }
+    };
+    fetchEventDescription();
+  }, [eventId]);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -66,13 +107,6 @@ const Message = () => {
     return null;
   }
 
-  const eventTitles: Record<string, string> = {
-    "first-meeting": "First Meeting",
-    "first-date": "First Date",
-    "made-official": "Made It Official",
-    "first-trip": "First Trip Together",
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-secondary to-background">
       <div className="container max-w-3xl mx-auto px-4 py-16">
@@ -85,14 +119,14 @@ const Message = () => {
           <CardHeader className="text-center space-y-4">
             <div className="flex justify-center">
               <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-[var(--shadow-glow)]">
-                <Heart className="w-8 h-8 text-primary-foreground fill-current" />
+                <MyHeart className="w-8 h-8 text-primary-foreground fill-current" />
               </div>
             </div>
             <CardTitle className="text-3xl">
-              {eventTitles[eventId || ""] || "Write Your Message"}
+              {eventTitle}
             </CardTitle>
             <CardDescription className="text-muted-foreground">
-              Share your thoughts and feelings about this special moment
+              {eventDescription}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
