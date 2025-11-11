@@ -8,6 +8,8 @@ import { ArrowLeft, Heart, Save, Upload, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import MyHeart from "@/components/ui/heart";
 
+const API_BASE = import.meta.env.VITE_BACKEND_URL + "/api";
+
 const Message = () => {
   
   interface Event {
@@ -48,7 +50,7 @@ const Message = () => {
   useEffect(() => {
     const fetchEventTitle = async () => {
       try {
-        const response = await fetch(`/api/events/${eventId}`);
+        const response = await fetch(`${API_BASE}/events/${eventId}`);
         if (response.ok) {
           const data: Event = await response.json();
           setEventTitle(data.title);
@@ -63,7 +65,7 @@ const Message = () => {
     useEffect(() => {
     const fetchEventDescription = async () => {
       try {
-        const response = await fetch(`/api/events/${eventId}`);
+        const response = await fetch(`${API_BASE}/events/${eventId}`);
         if (response.ok) {
           const data: Event = await response.json();
           setEventDescription(data.description);
