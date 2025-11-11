@@ -3,6 +3,8 @@ import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
 
+const BACKEND_URL = process.env.BACKEND_URL || process.env.VITE_BACKEND_URL || "http://127.0.0.1:3001";
+
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   server: {
@@ -12,7 +14,7 @@ export default defineConfig(({ mode }) => ({
     proxy: {
       // Proxy all requests starting with '/api' to the backend server
       '/api': {
-        target: 'http://127.0.0.1:3001',
+        target: BACKEND_URL,
         changeOrigin: true,
         // Rewrite to remove the '/api' prefix if the backend doesn't expect it
         // Since your backend handles routes starting with /api, we can omit rewrite.
