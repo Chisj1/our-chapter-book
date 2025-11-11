@@ -5,7 +5,7 @@ export const config = {
 
 export function middleware(request) {
   // Read the environment variable
-  const backendUrl = process.env.BACKEND_URL;
+  const backendUrl = process.env.VITE_BACKEND_URL;
 
   if (!backendUrl) {
     // Return a standard Response object for errors
